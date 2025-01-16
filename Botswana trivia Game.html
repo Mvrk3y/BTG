@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Much Do You Know Botswana?</title>
+    <style>
+         
+        body {
+            position:absolute;
+          width:100%;
+            height: 100%;
+            background-image: url(botswana-flag-wrinkled-dark-background-3d-render.jpg);
+        
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            height: 800px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-image: url(2.jpg);
+            background-size:contain;
+        }
+        h1 {
+            text-align: center;
+            color: #f1f1f1;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+            background-color:#ffffffce;
+        }
+        .options {
+            list-style-type:none;
+            padding: 0;
+        }
+        .options li {
+            margin-bottom: 10px;
+        }
+        .options button {
+            width: 100%;
+            padding: 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #0362c7ce;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+         
+        }
+        .options button:hover {
+            background-color: #293542;
+        }
+        .score {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 20px;
+            background-color: #fdfeff;
+            width: 100%;
+        }
+    
+        .options li + li {
+            margin-top: 10px;
+        }
+
+        #playAgain {
+            display: none;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #000000ce;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #playAgain:hover {
+            background-color: #fd0000;
+        }
+
+    </style>
+</head>
+<body>
+    <audio controls autoplay loop>
+        <source src="Maxy KhoiSan - Re Batswana (Official Video).mp3" type="audio/mpeg">
+    </audio>
+
+   
+
+    <div class="container">
+        <h1>How Much Do You Know Botswana?</h1>
+        <div id="game">
+            <p class="question" id="question"></p>
+            <ul class="options" id="options"></ul>
+            <p class="score" id="score"></p>
+            <div class="play-again" id="playAgain" style="display:inline-flex;">
+                <button onclick="restartGame()">Play Again</button>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                category: "Geography",
+                question: "What is the capital city of Botswana?",
+                options: ["Francistown", "Gaborone", "Maun", "Serowe"],
+                answer: 1
+            },
+            {
+                category: "History",
+                question: "In what year did Botswana gain independence from Britain?",
+                options: ["1964", "1965", "1966", "1967"],
+                answer: 2
+            },
+            {
+                category: "Wildlife",
+                question: "What is the name of Botswana’s famous elephant-rich national park?",
+                options: ["Moremi Game Reserve", "Okavango Delta", "Chobe National Park", "Central Kalahari Game Reserve"],
+                answer: 2
+            },
+            {
+                category: "Culture",
+                question: "True or False: The traditional dance of Botswana is called Tswana Dance.",
+                options: ["True", "False"],
+                answer: 0
+            },
+            {
+                category: "Geography",
+                question: "Which desert covers most of Botswana?",
+                options: ["Kalahari Desert", "Sahara Desert", "Namib Desert", "Atacama Desert"],
+                answer: 0
+            },
+            {
+                category: "Economy",
+                question: "What is Botswana’s main export?",
+                options: ["Gold", "Diamonds", "Copper", "Oil"],
+                answer: 1
+            },
+            {
+                category: "History",
+                question: "Who was Botswana’s first president?",
+                options: ["Seretse Khama", "Festus Mogae", "Ian Khama", "Quett Masire"],
+                answer: 0
+            },
+            {
+                category: "Wildlife",
+                question: "Which animal is featured on Botswana’s coat of arms?",
+                options: ["Lion", "Zebra", "Elephant", "Giraffe"],
+                answer: 1
+            },
+            {
+                category: "Culture",
+                question: "What is the name of the traditional Tswana gathering place?",
+                options: ["Kgosi", "Kgotla", "Morafe", "Bogadi"],
+                answer: 1
+            },
+            {
+                category: "Geography",
+                question: "What major river flows along Botswana’s northern border?",
+                options: ["Zambezi River", "Limpopo River", "Okavango River", "Chobe River"],
+                answer: 3
+            }
+        ];
+
+        let score = 0;
+        let currentQuestion = 0;
+
+        function displayQuestion() {
+            const questionElement = document.getElementById("question");
+            const optionsElement = document.getElementById("options");
+            const scoreElement = document.getElementById("score");
+
+            if (currentQuestion < questions.length) {
+                const question = questions[currentQuestion];
+                questionElement.textContent = `${question.category}: ${question.question}`;
+
+                optionsElement.innerHTML = "";
+                question.options.forEach((option, index) => {
+                    const button = document.createElement("button");
+                    button.textContent = option;
+                    button.onclick = () => checkAnswer(index);
+                    optionsElement.appendChild(button);
+                });
+
+                scoreElement.textContent = `Score: ${score}`;
+            } else {
+                questionElement.textContent = "Game Over!";
+                optionsElement.innerHTML = "";
+                scoreElement.textContent = `Your final score is: ${score}`;
+
+                if (score === questions.length * 100) {
+                    questionElement.textContent += "\nCongratulations! You answered all questions correctly. A new update will be added after 200 players play the game!";
+                }
+
+                if (currentQuestion >= questions.length) {
+    playAgainElement.style.display = "block";
+}
+
+            }
+        }
+
+        function checkAnswer(answerIndex) {
+            if (answerIndex === questions[currentQuestion].answer) {
+                score += 10;
+                alert("Correct!");
+            } else {
+                alert("Wrong answer.");
+            }
+            currentQuestion++;
+            displayQuestion();
+        }
+
+        
+
+        function restartGame() {
+            score = 0;
+            currentQuestion = 0;
+            document.getElementById("playAgain").style.display = "none";
+            displayQuestion();
+        }
+
+        // Initialize Game
+        displayQuestion();
+    </script> 
+    
+</style>
+
+</body>
+</html>
